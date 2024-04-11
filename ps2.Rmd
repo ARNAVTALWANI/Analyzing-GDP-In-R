@@ -1,0 +1,86 @@
+---
+title: "EngSci Data Science Mini-Course Problem Set 2, Summer 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### General instructions
+
+You will submit this assignment on Gradescope.com. 
+
+For every one of the questions, we are asking that you write a function that *returns* some value. This means that the function must return, rather than print that value. For example, the following function returns the square of its argument:
+
+```{r}
+f <- function(x){
+  x**2
+}
+```
+
+On the other hand, the following function only prints the value, and would not earn any credit for this assignment:
+```{r}
+f <- function(x){
+  cat(x**2)
+}
+```
+
+*Do not use `cat` or `print` inside functions*.
+
+You must test your functions thoroughly. This means you must try calling the functions (i.e., using them) with different inputs, and make sure that they return the right thing. You must also make sure that your submission passes all of the tests on Gradescope. However, passing all the visible tests on Gradescope does not guarantee that you will earn a perfect score: we may also have hidden tests on Gradescope. 
+You should submit one file containing all the functions. The name of the file must be `ps2.R`.
+
+Your grade will be solely based on whether your code passes the autograder test cases, both hidden and not hidden.
+
+### Problem 1(a): Range
+
+The *range* of a set numbers can mean the the interval between the smallest and the largest number of the set, or it can mean the length of that interval. For example, we might say that the range of `c(-2, 10, -10, 50)` is the interval $[-10, 50]$, or we might say that the range is $60$. R's built-in `range` function computes the interval. Write a function named `range_len` which takes in a vector of numerics `vec` and returns the length of the range interval of the vector. For example, `range_len(c(-2, 1, 5))` should be 7. You may assume the vector has at least one element.
+
+
+### Problem 2(a): stepping through `range_len`
+Submit a transcript of an interaction with GPT where you step through `range_len`. You must write the stepping, and ChatGPT should confirm that the stepping was down correct, as in Problem Set 1.
+
+### `gapminder` problems
+In the following problems, you will be working with data frames that have the same columns as `gapminder`:
+
+```{r}
+library(gapminder)
+colnames(gapminder)
+```
+
+However, you must not rely on the actual data being the same as what is in `gapminder`. The actual data will be given to the function.
+
+### Problem 2: Adding GDP
+
+We can compute the Gross Domestic Product (GDP) of a country by multiplying its GDP per capita by its population. The GDP of a country (rather than its GDP per capita) might be of interest because countries with larger GDP may have more influence than smaller countries with larger GDP per capita.
+
+Write a function named `compute_gdp_col` which takes in a `gapminder`-like dataframe, and returns a version of this dataframe which also has a `gdp` column, containing the GDP of each country in each given year. (The order of the rows should be the same as in the original data frame.)
+
+### Problem 3(a): Continent GDP
+
+Write a function named `cont_gdp` that takes in a `gapminder`-like data frame, and returns a data frame which contains the GDP of each continent for each year. The GDP of a continent is the sum of the all the countries on that continent. The rows in the data frame you return must be in alphabetical order of continents; for each continent, rows corresponding to earlier years should be above rows corresponding to later years.
+
+### Problem 3(b): Stepping through Continent GDP
+Submit a transcript of an interaction with GPT where you step through `cont_gdp`. You must write the stepping, and ChatGPT should confirm that the stepping was down correct, as in Problem Set 1.
+
+
+### Problem 4
+Submit a transcript of stepping through the following code:
+```
+g <- data.frame(country = c("Canada", "USA", "Canada", "USA"), year = c(1990, 1990, 2000, 2000), lifeExp = c(75, 74, 78, 75))
+
+g %>% group_by(country) %>% 
+        arrange(-year) %>% 
+        summarize(latestLifeExp = first_elem(lifeExp),
+                  earliestLifeExp = last_elem(lifeExp),
+                  earliestYear = min(year),
+                  latestYear = max(year)) %>% 
+        mutate(avgLEinc = (latestLifeExp-earliestLifeExp)/(latestYear-earliestYear))
+```
+
+
+
+### Problem 5: Median Range of GDP per capita
+
+For each country in `gapminder`, we can compute the range of the `gdpPercap` measurements over the years. Write a function named `median_gdppc_range` that takes in a `gapminder`-like data frame, and returns the name of the country whose range of `gdpPercap` measurements is closest to the median of the ranges in the dataset. If there are two such countries, you can return the name of either one of them. (This means you don't need to worry what to do if you have an even number of countries -- just pick one of the two that are closest to the median).
